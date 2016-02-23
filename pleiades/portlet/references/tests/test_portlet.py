@@ -1,17 +1,12 @@
-from zope.component import getUtility, getMultiAdapter
-
-from plone.portlets.interfaces import IPortletType
-from plone.portlets.interfaces import IPortletManager
+from pleiades.portlet.references import referencesportlet
+from pleiades.portlet.references.tests.base import TestCase
 from plone.portlets.interfaces import IPortletAssignment
 from plone.portlets.interfaces import IPortletDataProvider
+from plone.portlets.interfaces import IPortletManager
 from plone.portlets.interfaces import IPortletRenderer
-
-from plone.app.portlets.storage import PortletAssignmentMapping
-
-from pleiades.portlet.references import referencesportlet
-
-from pleiades.portlet.references.tests.base import TestCase
+from plone.portlets.interfaces import IPortletType
 from Products.CMFCore.utils import getToolByName
+from zope.component import getUtility, getMultiAdapter
 
 
 class TestPortlet(TestCase):
@@ -113,7 +108,7 @@ class TestRenderer(TestCase):
                           assignment=referencesportlet.Assignment())
         r = r.__of__(self.folder)
         r.update()
-        output = r.render()
+        r.render()
 
         # By default this folder has no references, so this portlet is
         # not displayed.
@@ -150,7 +145,7 @@ class TestRenderer(TestCase):
                           assignment=referencesportlet.Assignment())
         r = r.__of__(page)
         r.update()
-        output = r.render()
+        r.render()
 
         self.assertEqual(len(page.getRefs()), 2)
         self.failUnless(
@@ -168,11 +163,3 @@ class TestRenderer(TestCase):
         self.assertEqual(len(r.invisible_text_links), 1)
         self.assertEqual(len(r.visible_related_items), 0)
         self.assertEqual(len(r.invisible_related_items), 0)
-
-
-def test_suite():
-    from unittest import TestSuite, makeSuite
-    suite = TestSuite()
-    suite.addTest(makeSuite(TestPortlet))
-    suite.addTest(makeSuite(TestRenderer))
-    return suite
